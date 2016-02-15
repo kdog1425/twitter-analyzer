@@ -10,7 +10,7 @@ Using Spark’s Streaming capabilities, create a Spark process which will read t
 
 The result file can be seen in the project folder:
 
-tweeet-analysis_20160215_144541_L300_I300.txt
+tweet-analysis_20160215_144541_L300_I300.txt
 
 (L300 - 300 seconds window length, I300 - 300 seconds slide interval).
 
