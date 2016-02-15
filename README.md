@@ -40,8 +40,7 @@ e.g. 'best', 'free' yielded high values.
 
 c. Experimented with various window sizes, shorter to longer.
 
-d. Realized finding most retweeted tweet is doable but not as simple as it first seems (i.e. when the tweet first appears, it's retweet_count is 0, but that may change before the 5 minute window has passed).
-
+d. Realized finding most retweeted tweet seems doable but not as simple as it first seems (i.e. when the tweet first appears, it's retweet_count is 0, but that may change before the 5 minute window has passed).
 
 
 ### Who do I talk to? ###
