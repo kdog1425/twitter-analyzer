@@ -8,8 +8,17 @@ Task
 Using Spark’s Streaming capabilities, create a Spark process which will read tweets from Twitter’s Streaming API. These tweets should be filtered for a particular topic of your choice such as programming languages or sports teams. With this stream of tweets calculate a 5 minute window outputting the top 25 hashtag count. Capture at least three windows worth of data. The result should be a list of tuples similar to:
 (5,lakers) (4,cowboys) (4,rangers) ...
 
+The result file can be seen in the project folder:
+
+tweet-analysis_20160215_144541_L300_I300.txt
+
+(L300 - 300 seconds window length, I300 - 300 seconds slide interval).
+
+The output file shows the top 25 hashtags for the window, then lists the tweets with their respective sentiment analysis (higher number suggests a more positive sentiment).
 
 ### How do I get set up? ###
+
+clone repo.
 
 cd to project folder.
 
