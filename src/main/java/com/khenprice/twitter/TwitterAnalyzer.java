@@ -31,7 +31,7 @@ public class TwitterAnalyzer {
 
     int _windowLength = 60 * 5;
     int _slideInterval = 60 * 5;
-    String outfileName = "tweeet-analysis_" + MyUtils.getTime() + "_L"
+    String outfileName = "tweet-analysis_" + MyUtils.getTime() + "_L"
         + _windowLength + "_I" + _slideInterval + ".txt";
 
     try {
@@ -48,7 +48,7 @@ public class TwitterAnalyzer {
 
     // init spark
     SparkConf conf = new SparkConf().setAppName("Twitter Analyzer")
-        .setMaster("local[3]");
+        .setMaster("local[2]");
     JavaStreamingContext jsc = new JavaStreamingContext(conf,
         org.apache.spark.streaming.Durations.seconds(5));
 
