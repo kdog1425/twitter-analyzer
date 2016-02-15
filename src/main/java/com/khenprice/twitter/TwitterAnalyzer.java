@@ -1,25 +1,12 @@
 package com.khenprice.twitter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
@@ -58,7 +45,7 @@ public class TwitterAnalyzer {
     SparkConf conf = new SparkConf().setAppName("Twitter Analyzer")
         .setMaster("local[*]");
     JavaStreamingContext jsc = new JavaStreamingContext(conf,
-        org.apache.spark.streaming.Durations.seconds(60));
+        org.apache.spark.streaming.Durations.seconds(5));
 
     // set filters submitted to Twitter API
     String[] filters = new String[2];
