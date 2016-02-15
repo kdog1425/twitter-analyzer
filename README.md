@@ -15,10 +15,7 @@ cd to project folder.
 
 mvn exec:java -D exec.mainClass=com.khenprice.twitter.TwitterAnalyzer
 
-** Configuration ** 
-
-
-** Dependencies **
+### Dependencies ###
 See pom.xml
 
 ### Who do I talk to? ###
