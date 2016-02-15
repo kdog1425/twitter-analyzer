@@ -1,28 +1,25 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+### Code exercise for Yewno by Khen Price ###
 
-### What is this repository for? ###
+### Specifications (as given by Yewno) ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Task
+Using Spark’s Streaming capabilities, create a Spark process which will read tweets from Twitter’s Streaming API. These tweets should be filtered for a particular topic of your choice such as programming languages or sports teams. With this stream of tweets calculate a 5 minute window outputting the top 25 hashtag count. Capture at least three windows worth of data. The result should be a list of tuples similar to:
+(5,lakers) (4,cowboys) (4,rangers) ...
+
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Run
+cd to project folder.
+
 mvn exec:java -D exec.mainClass=com.khenprice.twitter.TwitterAnalyzer
 
-### Contribution guidelines ###
+** Configuration ** 
 
-* Writing tests
-* Code review
-* Other guidelines
+
+** Dependencies **
+See pom.xml
 
 ### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+khenprice@gmail.com
