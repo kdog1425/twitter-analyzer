@@ -18,5 +18,31 @@ mvn exec:java -D exec.mainClass=com.khenprice.twitter.TwitterAnalyzer
 ### Dependencies ###
 See pom.xml
 
+### Workflow ###
+
+1) Familiarization with Spark - installation, running examples.
+
+2) Setting up Twitter api - attaining all the access codes and experimenting with setting up a stream, filtering it.
+
+3) Working with Spark and Twitter (Java)
+
+a. Filtering for hashtags.
+b. Understanding windowing
+c. Working with RDDs
+d. sorting.
+
+4) Final steps.
+
+a. Code refactoring - upgraded to Java 8 to enable lambda expressions. Reiterated on design of classes and methods.
+
+b. Experimented with single token sentiment analysis (to make sure there StanfordNLP works as expected).
+e.g. 'best', 'free' yielded high values.
+
+c. Experimented with various window sizes, shorter to longer.
+
+d. Realized finding most retweeted tweet is doable but not as simple as it first seems (i.e. when the tweet first appears, it's retweet_count is 0, but that may change before the 5 minute window has passed).
+
+
+
 ### Who do I talk to? ###
 khenprice@gmail.com
