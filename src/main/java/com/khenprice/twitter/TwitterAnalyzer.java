@@ -1,8 +1,10 @@
 package com.khenprice.twitter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +31,8 @@ import scala.Tuple2;
 import twitter4j.Status;
 
 /**
- * This class is the entry point. It handles the streaming
- * data from Twitter and manages the analysis.
+ * This class is the entry point. It handles the streaming data from Twitter and
+ * manages the analysis.
  * 
  * @author khenprice
  *
@@ -40,6 +42,12 @@ public class TwitterAnalyzer {
     Logger.getLogger("org").setLevel(Level.OFF);
     Logger.getLogger("akka").setLevel(Level.OFF);
 
+    try {
+      System.setOut(new PrintStream(new File("output-file.txt")));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
     // prepare for sentiment analysis
     StanfordNLP.init();
 
@@ -76,7 +84,8 @@ public class TwitterAnalyzer {
 
     // Windowing Reduce Function
     JavaPairDStream<String, Integer> windowedWordCounts = pairs
-        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(10), Durations.seconds(10));
+        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(10),
+            Durations.seconds(10));
 
     // Reverse Pairs so we can sort
     JavaPairDStream<Integer, String> reversedCounts = windowedWordCounts
@@ -94,28 +103,27 @@ public class TwitterAnalyzer {
   }
 
   public static void print(JavaPairDStream<Integer, String> stream) {
-    stream.foreachRDD(pairRdd ->
-        {
-          System.out.println();
-          System.out.println("-------------------------------------------");
-          String time = new SimpleDateFormat("yyyyMMdd_HHmmss")
-              .format(Calendar.getInstance().getTime());
-          System.out.println("Time: " + time);
-          System.out.println("-------------------------------------------");
-          int count = 1;
-          for (Tuple2<Integer, String> t : pairRdd.collect()) {
-            if (count > 25)
-              break;
-            System.out.println(count + ": (" + t._2 + ", " + t._1 + ")");
-            count++;
-          }
-          if (count > 1) {
-            System.out.println(
-                "-------------------END-Hashtag-Count-------------------");
-          }
-          System.out.println();
-          MyUtils.dumpSentiments();
-      });
+    stream.foreachRDD(pairRdd -> {
+      System.out.println();
+      System.out.println("-------------------------------------------");
+      String time = new SimpleDateFormat("yyyyMMdd_HHmmss")
+          .format(Calendar.getInstance().getTime());
+      System.out.println("Time: " + time);
+      System.out.println("-------------------------------------------");
+      int count = 1;
+      for (Tuple2<Integer, String> t : pairRdd.collect()) {
+        if (count > 25)
+          break;
+        System.out.println(count + ": (" + t._2 + ", " + t._1 + ")");
+        count++;
+      }
+      if (count > 1) {
+        System.out
+            .println("-------------------END-Hashtag-Count-------------------");
+      }
+      System.out.println();
+      MyUtils.dumpSentiments();
+    });
   }
 
 }
