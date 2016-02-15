@@ -58,7 +58,7 @@ public class TwitterAnalyzer {
     SparkConf conf = new SparkConf().setAppName("Twitter Analyzer")
         .setMaster("local[*]");
     JavaStreamingContext jsc = new JavaStreamingContext(conf,
-        org.apache.spark.streaming.Durations.seconds(5));
+        org.apache.spark.streaming.Durations.seconds(60));
 
     // set filters submitted to Twitter API
     String[] filters = new String[2];
@@ -69,14 +69,12 @@ public class TwitterAnalyzer {
     JavaReceiverInputDStream<Status> twitterStream = TwitterUtils
         .createStream(jsc, null, filters);
 
-    // get hashtags from stream of statuses
+    // process each tweet
     JavaDStream<String> statuses = twitterStream
-        .flatMap(new FlatMapFunction<Status, String>() {
-          public Iterable<String> call(Status status) {
-            MyUtils.getSentiments(status);
+        .flatMap(status -> {
+            MyUtils.processTweet(status);
             return MyUtils.getHashtags(status);
-          }
-        });
+          });
 
     // Count each word in each batch, forming pairs
     JavaPairDStream<String, Integer> pairs = statuses
@@ -84,8 +82,8 @@ public class TwitterAnalyzer {
 
     // Windowing Reduce Function
     JavaPairDStream<String, Integer> windowedWordCounts = pairs
-        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(10),
-            Durations.seconds(10));
+        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(60*5),
+            Durations.seconds(60*5));
 
     // Reverse Pairs so we can sort
     JavaPairDStream<Integer, String> reversedCounts = windowedWordCounts
@@ -95,35 +93,11 @@ public class TwitterAnalyzer {
     JavaPairDStream<Integer, String> sortedCounts = reversedCounts
         .transformToPair(rdd -> rdd.sortByKey(false));
 
-    // print top 25 hashtags
-    print(sortedCounts);
+    // output analysis
+    MyUtils.print(sortedCounts);
 
     jsc.start();
     jsc.awaitTermination();
-  }
-
-  public static void print(JavaPairDStream<Integer, String> stream) {
-    stream.foreachRDD(pairRdd -> {
-      System.out.println();
-      System.out.println("-------------------------------------------");
-      String time = new SimpleDateFormat("yyyyMMdd_HHmmss")
-          .format(Calendar.getInstance().getTime());
-      System.out.println("Time: " + time);
-      System.out.println("-------------------------------------------");
-      int count = 1;
-      for (Tuple2<Integer, String> t : pairRdd.collect()) {
-        if (count > 25)
-          break;
-        System.out.println(count + ": (" + t._2 + ", " + t._1 + ")");
-        count++;
-      }
-      if (count > 1) {
-        System.out
-            .println("-------------------END-Hashtag-Count-------------------");
-      }
-      System.out.println();
-      MyUtils.dumpSentiments();
-    });
   }
 
 }

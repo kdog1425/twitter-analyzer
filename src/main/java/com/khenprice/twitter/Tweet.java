@@ -42,7 +42,7 @@ public class Tweet {
   }
 
   public String toString() {
-    return new String("Text:[" + text + "]" + " | " + "Retweets: "
-        + retweetCount + " | " + "Sentiment: [" + sentiment + "]");
+    return new String("Text:[" + text + "] | " + "Retweets: ["
+        + retweetCount + "] | " + "Sentiment: [" + sentiment + "]");
   }
 }
