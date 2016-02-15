@@ -11,6 +11,8 @@ Using Spark’s Streaming capabilities, create a Spark process which will read t
 
 ### How do I get set up? ###
 
+clone repo.
+
 cd to project folder.
 
 mvn exec:java -D exec.mainClass=com.khenprice.twitter.TwitterAnalyzer
