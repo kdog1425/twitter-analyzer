@@ -53,10 +53,9 @@ public class TwitterAnalyzer {
         org.apache.spark.streaming.Durations.seconds(5));
 
     // set filters submitted to Twitter API
-    String[] filters = new String[3];
-    filters[0] = "party";
-    filters[1] = "nyc";
-    filters[2] = "output";
+    String[] filters = new String[2];
+    filters[0] = "Bernie";
+    filters[1] = "Sanders";
 
     // twitter stream
     JavaReceiverInputDStream<Status> twitterStream = TwitterUtils
@@ -95,30 +94,28 @@ public class TwitterAnalyzer {
   }
 
   public static void print(JavaPairDStream<Integer, String> stream) {
-    stream.foreach(new Function<JavaPairRDD<Integer, String>, Void>() {
-      public Void call(JavaPairRDD<Integer, String> v1) throws Exception {
-        int count = 1;
-        System.out.println();
-        System.out.println("-------------------------------------------");
-        String time = new SimpleDateFormat("yyyyMMdd_HHmmss")
-            .format(Calendar.getInstance().getTime());
-        System.out.println("Time: " + time);
-        System.out.println("-------------------------------------------");
-        for (Tuple2<Integer, String> t : v1.collect()) {
-          if (count > 25)
-            break;
-          System.out.println(count + ": (" + t._2 + ", " + t._1 + ")");
-          count++;
-        }
-        if (count > 1) {
-          System.out.println(
-              "-------------------END-Hashtag-Count-------------------");
-        }
-        System.out.println();
-        MyUtils.dumpSentiments();
-        return null;
-      }
-    });
+    stream.foreachRDD(pairRdd ->
+        {
+          System.out.println();
+          System.out.println("-------------------------------------------");
+          String time = new SimpleDateFormat("yyyyMMdd_HHmmss")
+              .format(Calendar.getInstance().getTime());
+          System.out.println("Time: " + time);
+          System.out.println("-------------------------------------------");
+          int count = 1;
+          for (Tuple2<Integer, String> t : pairRdd.collect()) {
+            if (count > 25)
+              break;
+            System.out.println(count + ": (" + t._2 + ", " + t._1 + ")");
+            count++;
+          }
+          if (count > 1) {
+            System.out.println(
+                "-------------------END-Hashtag-Count-------------------");
+          }
+          System.out.println();
+          MyUtils.dumpSentiments();
+      });
   }
 
 }
