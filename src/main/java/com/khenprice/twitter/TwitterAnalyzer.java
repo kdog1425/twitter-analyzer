@@ -73,40 +73,19 @@ public class TwitterAnalyzer {
 
     // Count each word in each batch, forming pairs
     JavaPairDStream<String, Integer> pairs = statuses
-        .mapToPair(new PairFunction<String, String, Integer>() {
-          public Tuple2<String, Integer> call(String s) {
-            return new Tuple2<String, Integer>(s, 1);
-          }
-        });
+        .mapToPair(s -> new Tuple2<>(s, 1));
 
     // Windowing Reduce Function
     JavaPairDStream<String, Integer> windowedWordCounts = pairs
-        .reduceByKeyAndWindow(new Function2<Integer, Integer, Integer>() {
-          public Integer call(Integer i1, Integer i2) {
-            return i1 + i2;
-          }
-        }, Durations.seconds(10), Durations.seconds(10));
+        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(10), Durations.seconds(10));
 
     // Reverse Pairs so we can sort
     JavaPairDStream<Integer, String> reversedCounts = windowedWordCounts
-        .mapToPair(
-            new PairFunction<Tuple2<String, Integer>, Integer, String>() {
-              public Tuple2<Integer, String> call(Tuple2<String, Integer> t)
-                  throws Exception {
-                return new Tuple2<Integer, String>(t._2, t._1);
-              }
-            });
+        .mapToPair(p -> new Tuple2<Integer, String>(p._2, p._1));
 
     // Sort pairs
     JavaPairDStream<Integer, String> sortedCounts = reversedCounts
-        .transformToPair(
-            new Function<JavaPairRDD<Integer, String>, JavaPairRDD<Integer, String>>() {
-              public JavaPairRDD<Integer, String> call(
-                  JavaPairRDD<Integer, String> longIntegerJavaPairRDD)
-                      throws Exception {
-                return longIntegerJavaPairRDD.sortByKey(false);
-              }
-            });
+        .transformToPair(rdd -> rdd.sortByKey(false));
 
     // print top 25 hashtags
     print(sortedCounts);
