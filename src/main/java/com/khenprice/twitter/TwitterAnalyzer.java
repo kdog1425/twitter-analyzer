@@ -26,15 +26,20 @@ import twitter4j.Status;
  */
 public class TwitterAnalyzer {
   public static void main(String[] argv) throws IOException {
-    Logger.getLogger("org").setLevel(Level.OFF);
-    Logger.getLogger("akka").setLevel(Level.OFF);
+    // Logger.getLogger("org").setLevel(Level.OFF);
+    // Logger.getLogger("akka").setLevel(Level.OFF);
+
+    int _windowLength = 60 * 5;
+    int _slideInterval = 60 * 5;
+    String outfileName = "tweeet-analysis_" + MyUtils.getTime() + "_L"
+        + _windowLength + "_I" + _slideInterval + ".txt";
 
     try {
-      System.setOut(new PrintStream(new File("output-file.txt")));
+      System.setOut(new PrintStream(new File(outfileName)));
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
+
     // prepare for sentiment analysis
     StanfordNLP.init();
 
@@ -43,7 +48,7 @@ public class TwitterAnalyzer {
 
     // init spark
     SparkConf conf = new SparkConf().setAppName("Twitter Analyzer")
-        .setMaster("local[*]");
+        .setMaster("local[3]");
     JavaStreamingContext jsc = new JavaStreamingContext(conf,
         org.apache.spark.streaming.Durations.seconds(5));
 
@@ -57,11 +62,10 @@ public class TwitterAnalyzer {
         .createStream(jsc, null, filters);
 
     // process each tweet
-    JavaDStream<String> statuses = twitterStream
-        .flatMap(status -> {
-            MyUtils.processTweet(status);
-            return MyUtils.getHashtags(status);
-          });
+    JavaDStream<String> statuses = twitterStream.flatMap(status -> {
+      MyUtils.processTweet(status);
+      return MyUtils.getHashtags(status);
+    });
 
     // Count each word in each batch, forming pairs
     JavaPairDStream<String, Integer> pairs = statuses
@@ -69,8 +73,8 @@ public class TwitterAnalyzer {
 
     // Windowing Reduce Function
     JavaPairDStream<String, Integer> windowedWordCounts = pairs
-        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(60*5),
-            Durations.seconds(60*5));
+        .reduceByKeyAndWindow((a, b) -> a + b, Durations.seconds(_windowLength),
+            Durations.seconds(_slideInterval));
 
     // Reverse Pairs so we can sort
     JavaPairDStream<Integer, String> reversedCounts = windowedWordCounts

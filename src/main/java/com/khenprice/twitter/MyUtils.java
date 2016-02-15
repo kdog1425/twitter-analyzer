@@ -94,8 +94,7 @@ public class MyUtils {
     stream.foreachRDD(pairRdd -> {
       System.out.println();
       System.out.println("-------------------------------------------");
-      String time = new SimpleDateFormat("yyyyMMdd_HHmmss")
-          .format(Calendar.getInstance().getTime());
+      String time = getTime();
       System.out.println("Time: " + time);
       System.out.println("-------------------------------------------");
       int count = 1;
@@ -114,6 +113,11 @@ public class MyUtils {
       dumpMostRetweeted();
       reset();
     });
+  }
+  
+  public static String getTime(){
+    return new SimpleDateFormat("yyyyMMdd_HHmmss")
+    .format(Calendar.getInstance().getTime());
   }
 
 }
