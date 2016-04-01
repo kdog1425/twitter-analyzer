@@ -38,8 +38,11 @@ See pom.xml
 3) Working with Spark and Twitter (Java)
 
 a. Filtering for hashtags.
+
 b. Understanding windowing
+
 c. Working with RDDs
+
 d. sorting.
 
 4) Final steps.
