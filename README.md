@@ -31,17 +31,17 @@ See pom.xml
 
 ### Workflow ###
 
-1) Familiarization with Spark - installation, running examples.
+1. Familiarization with Spark - installation, running examples.
 
-2) Setting up Twitter api - attaining all the access codes and experimenting with setting up a stream, filtering it.
+2. Setting up Twitter api - attaining all the access codes and experimenting with setting up a stream, filtering it.
 
-3) Working with Spark and Twitter (Java)
+3. Working with Spark and Twitter (Java)
   1. Filtering for hashtags.
   2. Understanding windowing
   3. Working with RDDs
   4. Sorting.
 
-4) Final steps.
+4. Final steps.
 
   1. Code refactoring - upgraded to Java 8 to enable lambda expressions. Reiterated on design of classes and methods.
   2. Experimented with single token sentiment analysis (to make sure there StanfordNLP works as expected). For example, 'best', 'free' yielded high values.
