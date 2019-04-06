@@ -46,7 +46,7 @@ See pom.xml
   1. Code refactoring - upgraded to Java 8 to enable lambda expressions. Reiterated on design of classes and methods.
   2. Experimented with single token sentiment analysis (to make sure there StanfordNLP works as expected). For example, 'best', 'free' yielded high values.
   3. Experimented with various window sizes, shorter to longer.
-  4. Realized finding most retweeted tweet seems doable but not as simple as it first seems (i.e. when the tweet first appears, it's retweet_count is 0, but that may change before the 5 minute window has passed).
+  4. Realized finding most retweeted tweet seems doable but not as simple as it first was (i.e. when the tweet first appears, it's retweet_count is 0, but that may change before the 5 minute window has passed).
 
 
 ### Who do I talk to? ###
